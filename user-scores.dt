@@ -1,0 +1,12 @@
+[
+    {
+        "userId": "Petro",
+        "scoreTime": "123",
+        "scoreEat": "66"
+    },
+    {
+        "userId": "Nina",
+        "scoreTime": "4",
+        "scoreEat": "54"
+    }
+]
