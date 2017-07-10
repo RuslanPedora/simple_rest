@@ -80,7 +80,7 @@ function addUserHandler( req, res, next ) {
     userScoresSrc.push( new User( userId, req.query.scoreTime, req.query.scoreEat ) );
     fsService.updateScoresDataDB( JSON.stringify( userScoresSrc, null, '    ' ) );
 
-    res.writeHead( 200, {'Content-Type': 'application/json',
+    res.writeHead( 201, {'Content-Type': 'application/json',
                          'Access-Control-Allow-Origin': '*',
                          'Access-Control-Allow-Methods': 'PUT' } );        
     res.end( 'User ' + userId + ' has been created\n' + JSON.stringify( userScoresSrc[ userScoresSrc.length - 1 ], null, '    ' ) );
@@ -97,7 +97,7 @@ function getUserScoreHandler( req, res, next ) {
         next( new Error( 'Unable to get user with undefined Id' ) );
         return;
     } else if ( ! ( user = userScoresSrc.find( elem => elem.userId.toLowerCase() === ( '' + userId ).toLowerCase() ) ) ) {
-        res.status( 404 );
+        res.status( 204 );
         next( new Error( `User ${userId} doesn't exist` ) );
         return;
     }
@@ -117,7 +117,7 @@ function updateUserScoreHandler( req, res, next ) {
         next( new Error( 'Unable to get user with undefined Id' ) );
         return;
     } else if ( ! ( user = userScoresSrc.find( elem => elem.userId.toLowerCase() === ( '' + userId ).toLowerCase() ) ) ) {
-        res.status( 404 );
+        res.status( 204 );
         next( new Error( `User ${userId} doesn't exist` ) );
         return;
     }
@@ -141,7 +141,7 @@ function deleteUserHandler( req, res, next ) {
         next( new Error( 'Unable to delete user with undefined Id' ) );
         return;
     } else if ( ( userIndex = userScoresSrc.findIndex( elem => elem.userId.toLowerCase() === ( '' + userId ).toLowerCase() ) ) === -1 ) {
-        res.status( 404 );
+        res.status( 204 );
         next( new Error( `User ${userId} doesn't exist` ) );
         return;
     }
