@@ -1,5 +1,5 @@
 'use strict'
-const dbFileName = 'user-scores.dt'
+const dbFileName = 'user-scores.dat'
 
 const fs = require( 'fs' );
 //--------------------------------------------------------------------------------

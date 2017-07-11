@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const expressApp = express();
 const fsService = require( './fs-inner-features' );
+const serverPort = 8080;
 
 let userScoresSrc;
 
@@ -14,17 +15,16 @@ if ( !userScoresSrc )  {
     process.exit( 0 );
 }
 
-const httpServer = expressApp.listen( 8080, () => {
-    console.log( 'Local http server has started port: 8080' );
+const httpServer = expressApp.listen( serverPort, () => {
+    console.log( 'Local http server has started port: ' + serverPort );
 } ); 
 //--------------------------------------------------------------------------------
-expressApp.use( preHandler );
+expressApp.use( echoURL );
 expressApp.use( bodyParser.json() );
 expressApp.use( cors() );
 
-expressApp.route( '/scores' )
-     .get( totalScoresHandler )
-     .delete( deleteScoresHandler );
+expressApp.get( '/scores', totalScoresHandler );
+expressApp.delete( '/scores/delete-all', deleteScoresHandler );
 
 expressApp.route( '/scores/user/:userId' )
     .post( addUserHandler )
@@ -34,7 +34,7 @@ expressApp.route( '/scores/user/:userId' )
 
 expressApp.use( errorHandler );
 //--------------------------------------------------------------------------------
-function preHandler( req, res, next ) {
+function echoURL( req, res, next ) {
     console.log( 'URL request detected ' + req.originalUrl );
     next();
 } 
@@ -46,7 +46,7 @@ function totalScoresHandler( req, res, next ) {
                          'Access-Control-Allow-Methods': 'GET' } );            
 
     if ( userScoresSrc.length === 0 ) {
-        res.end( 'Score table is empty' );
+        res.end( JSON.stringify( [] ) );
         return;
     }
 
@@ -58,10 +58,10 @@ function deleteScoresHandler( req, res, next ) {
     userScoresSrc = [];
     fsService.updateScoresDataDB( JSON.stringify( userScoresSrc, null, '    ' ) );
 
-    res.writeHead( 200, {'Content-Type': 'plain/text',
+    res.writeHead( 200, {'Content-Type': 'application/json',
                          'Access-Control-Allow-Origin': '*',
-                         'Access-Control-Allow-Methods': 'DELETE' } );                
-    res.end( 'Score table has been cleaned' );                         
+                         'Access-Control-Allow-Methods': 'DELETE' } );
+    res.end( JSON.stringify( { status: 'deleted successfully' }) );
 }
 //--------------------------------------------------------------------------------
 function addUserHandler( req, res, next ) {
@@ -76,16 +76,15 @@ function addUserHandler( req, res, next ) {
         next( new Error( `User ${userId} already exist` ) );
         return;
     }
-
-    userScoresSrc.push( new User( userId, req.query.scoreTime, req.query.scoreEat ) );
+    let newUser = new User( userId, req.body.scoreTime, req.body.scoreEat );
+    console.log( 'New user added: '  +JSON.stringify( newUser ) );
+    userScoresSrc.push( newUser );
     fsService.updateScoresDataDB( JSON.stringify( userScoresSrc, null, '    ' ) );
 
     res.writeHead( 201, {'Content-Type': 'application/json',
                          'Access-Control-Allow-Origin': '*',
                          'Access-Control-Allow-Methods': 'PUT' } );        
-    res.end( 'User ' + userId + ' has been created\n' + JSON.stringify( userScoresSrc[ userScoresSrc.length - 1 ], null, '    ' ) );
-    
-    console.log( 'Body when adding new user: ' + JSON.stringify( req.body ) );
+    res.end( JSON.stringify( userScoresSrc[ userScoresSrc.length - 1 ], null, '    ' ) );
 }
 //--------------------------------------------------------------------------------
 function getUserScoreHandler( req, res, next ) {
@@ -98,7 +97,7 @@ function getUserScoreHandler( req, res, next ) {
         return;
     } else if ( ! ( user = userScoresSrc.find( elem => elem.userId.toLowerCase() === ( '' + userId ).toLowerCase() ) ) ) {
         res.status( 204 );
-        next( new Error( `User ${userId} doesn't exist` ) );
+        next( new Error( `User ${userId} doesn\'t exist` ) );
         return;
     }
 
@@ -118,17 +117,17 @@ function updateUserScoreHandler( req, res, next ) {
         return;
     } else if ( ! ( user = userScoresSrc.find( elem => elem.userId.toLowerCase() === ( '' + userId ).toLowerCase() ) ) ) {
         res.status( 204 );
-        next( new Error( `User ${userId} doesn't exist` ) );
+        next( new Error( `User ${userId} doesn\'t exist` ) );
         return;
     }
 
-    user.scoreTime = req.query.scoreTime;
-    user.scoreEat = req.query.scoreEat;
+    user.scoreTime = req.body.scoreTime;
+    user.scoreEat = req.body.scoreEat;
     
     res.writeHead( 200, {'Content-Type': 'application/json',
                          'Access-Control-Allow-Origin': '*',
                          'Access-Control-Allow-Methods': 'PUT' } );        
-    res.end( 'User ' + userId + ' has been updated\n' + JSON.stringify( user, null, '    ' ) );
+    res.end( JSON.stringify( user, null, '    ' ) );
     fsService.updateScoresDataDB( JSON.stringify( userScoresSrc, null, '    ' ) );
 }
 //--------------------------------------------------------------------------------
@@ -142,7 +141,7 @@ function deleteUserHandler( req, res, next ) {
         return;
     } else if ( ( userIndex = userScoresSrc.findIndex( elem => elem.userId.toLowerCase() === ( '' + userId ).toLowerCase() ) ) === -1 ) {
         res.status( 204 );
-        next( new Error( `User ${userId} doesn't exist` ) );
+        next( new Error( `User ${userId} doesn\'t exist` ) );
         return;
     }
 
@@ -152,14 +151,14 @@ function deleteUserHandler( req, res, next ) {
     res.writeHead( 200, {'Content-Type': 'application/json',
                          'Access-Control-Allow-Origin': '*',
                          'Access-Control-Allow-Methods': 'DELETE' } );        
-    res.end( 'User ' + userId + ' has been deleted' );
+    res.end( JSON.stringify( { status: 'deleted successfully' } ) );
 }
 //--------------------------------------------------------------------------------
 function errorHandler( err, req, res, next ) {
     console.error( err.message );
-    res.setHeader( 'Content-Type', 'text/html' );
+    res.setHeader( 'Content-Type', 'application/json' );
     res.setHeader( 'Access-Control-Allow-Origin', '*' );    
-    res.end( err.message );
+    res.end( JSON.stringify( { errorMessage: err.message } ) );
 }
 //--------------------------------------------------------------------------------
 function User( name, scoreTime = 0, scoreEat = 0 ) {    
