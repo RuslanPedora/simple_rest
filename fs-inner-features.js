@@ -1,14 +1,14 @@
 'use strict'
-const dbFileName = 'user-scores.dat'
+const dbFileName = 'records.dat'
 
 const fs = require( 'fs' );
 //--------------------------------------------------------------------------------
 module.exports = {
-    readScoresDataFromDB: readScoresData,
-    updateScoresDataDB: updateScoresData
+    readRecordsDataFromDB: readRecordsData,
+    updateRecordsDataDB: updateRecordsData
 }
 //--------------------------------------------------------------------------------
-function readScoresData() {
+function readRecordsData() {
 
     try {
         return JSON.parse( fs.readFileSync( dbFileName ).toString() );
@@ -19,7 +19,7 @@ function readScoresData() {
     }
 }
 //--------------------------------------------------------------------------------
-function updateScoresData( inputData ) {
+function updateRecordsData( inputData ) {
     fs.writeFile( dbFileName, inputData );
 }
 //--------------------------------------------------------------------------------

@@ -1,0 +1,102 @@
+[
+    {
+        "userId": "Mykyta",
+        "scoreTime": 11.348888888855,
+        "scoreEat": 11
+    },
+    {
+        "userId": "Mykola",
+        "scoreTime": 22,
+        "scoreEat": 22
+    },
+    {
+        "userId": "Olena",
+        "scoreTime": 33,
+        "scoreEat": 33
+    },
+    {
+        "userId": "Taras",
+        "scoreTime": 44,
+        "scoreEat": 44
+    },
+    {
+        "userId": "Stepan",
+        "scoreTime": 55,
+        "scoreEat": 55
+    },
+    {
+        "userId": "Ihor",
+        "scoreTime": 123,
+        "scoreEat": 12
+    },
+    {
+        "userId": "Bohdan",
+        "scoreTime": 303,
+        "scoreEat": 59
+    },
+    {
+        "userId": "Volodymyr",
+        "scoreTime": 12,
+        "scoreEat": 100
+    },
+    {
+        "userId": "Vasyl",
+        "scoreTime": 3,
+        "scoreEat": 1
+    },
+    {
+        "userId": "Oleksiy",
+        "scoreTime": 60,
+        "scoreEat": 30
+    },
+    {
+        "userId": "Sophia",
+        "scoreTime": 45,
+        "scoreEat": 9
+    },
+    {
+        "userId": "Chrystyna",
+        "scoreTime": 17,
+        "scoreEat": 9
+    },
+    {
+        "userId": "Halyna",
+        "scoreTime": 28,
+        "scoreEat": 1
+    },
+    {
+        "userId": "Iryna",
+        "scoreTime": 1,
+        "scoreEat": 1
+    },
+    {
+        "userId": "Tetyana",
+        "scoreTime": 27,
+        "scoreEat": 15
+    },
+    {
+        "userId": "Lilia",
+        "scoreTime": 45,
+        "scoreEat": 33
+    },
+    {
+        "userId": "Markiyan",
+        "scoreTime": 1,
+        "scoreEat": 99
+    },
+    {
+        "userId": "Juja",
+        "scoreTime": 107,
+        "scoreEat": 11
+    },
+    {
+        "userId": "Solomiya",
+        "scoreTime": 11,
+        "scoreEat": 2
+    },
+    {
+        "userId": "Zorro",
+        "scoreTime": 90,
+        "scoreEat": 5
+    }
+]
